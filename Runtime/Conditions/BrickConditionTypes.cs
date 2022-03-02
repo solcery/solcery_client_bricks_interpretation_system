@@ -9,6 +9,8 @@ namespace Solcery.BrickInterpretation.Runtime.Conditions
         LesserThan = 4,
         Argument = 5,
         Or = 6,
-        And = 7
+        And = 7,
+        IteratorOr = 8,
+        IteratorAnd = 9
     }
 }

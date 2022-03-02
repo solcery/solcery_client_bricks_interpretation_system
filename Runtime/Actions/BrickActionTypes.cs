@@ -12,6 +12,10 @@ namespace Solcery.BrickInterpretation.Runtime.Actions
         SetAttribute = 7,
         UseCard = 8,
         SetGameAttribute = 9,
+        Pause = 10,
+        Event = 11,
+        CreateObject = 12,
+        DeleteObject = 13,
         ConsoleLog = 256
     }
 }

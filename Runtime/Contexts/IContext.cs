@@ -1,3 +1,4 @@
+using Newtonsoft.Json.Linq;
 using Solcery.BrickInterpretation.Runtime.Contexts.Args;
 using Solcery.BrickInterpretation.Runtime.Contexts.Attrs;
 using Solcery.BrickInterpretation.Runtime.Contexts.Objects;
@@ -15,5 +16,8 @@ namespace Solcery.BrickInterpretation.Runtime.Contexts
         IContextGameVars GameVars { get; }
         IContextGameObjects GameObjects { get; }
         ILog Log { get; }
+
+        bool DeleteObject(object @object);
+        bool TryCreateObject(JObject parameters, out object @object);
     }
 }

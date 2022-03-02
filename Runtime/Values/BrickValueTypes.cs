@@ -15,6 +15,8 @@ namespace Solcery.BrickInterpretation.Runtime.Values
         Random = 10,
         CardId = 11,
         CardTypeId = 12,
-        GameAttribute = 13
+        GameAttribute = 13,
+        IteratorSum = 14,
+        SetVariable = 15
     }
 }
