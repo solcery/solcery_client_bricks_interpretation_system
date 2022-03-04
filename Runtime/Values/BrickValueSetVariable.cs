@@ -7,7 +7,12 @@ namespace Solcery.BrickInterpretation.Runtime.Values
 {
     public sealed class BrickValueSetVariable : BrickValue
     {
-        public BrickValueSetVariable(int type, int subType) : base(type, subType) { }
+        public static BrickValue Create(int type, int subType)
+        {
+            return new BrickValueSetVariable(type, subType);
+        }
+        
+        private BrickValueSetVariable(int type, int subType) : base(type, subType) { }
         
         public override void Reset() { }
 
