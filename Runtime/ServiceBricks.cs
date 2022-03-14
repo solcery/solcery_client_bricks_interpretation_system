@@ -9,7 +9,7 @@ using Solcery.BrickInterpretation.Runtime.Values;
 
 namespace Solcery.BrickInterpretation.Runtime
 {
-    public class ServiceBricks : IServiceBricks
+    public class ServiceBricks : IServiceBricks, IServiceBricksInternal
     {
         private readonly Dictionary<int, JObject> _customBricks;
 
@@ -54,18 +54,30 @@ namespace Solcery.BrickInterpretation.Runtime
         {
             Cleanup();
         }
-        
-        bool IServiceBricks.ExecuteActionBrick(JObject brickObject, IContext context, int level)
+
+        bool IServiceBricks.ExecuteBrick(JObject brickObject, IContext context, int level)
+        {
+            if (!ExecuteActionBrick(brickObject, context, level))
+            {
+                return false;
+            }
+            
+            context.GameStates.PushGameState();
+            return true;
+
+        }
+
+        bool IServiceBricksInternal.ExecuteActionBrick(JObject brickObject, IContext context, int level)
         {
             return ExecuteActionBrick(brickObject, context, level);
         }
         
-        bool IServiceBricks.ExecuteValueBrick(JObject brickObject, IContext context, int level, out int result)
+        bool IServiceBricksInternal.ExecuteValueBrick(JObject brickObject, IContext context, int level, out int result)
         {
             return ExecuteValueBrick(brickObject, context, level, out result);
         }
         
-        bool IServiceBricks.ExecuteConditionBrick(JObject brickObject, IContext context, int level, out bool result)
+        bool IServiceBricksInternal.ExecuteConditionBrick(JObject brickObject, IContext context, int level, out bool result)
         {
             return ExecuteConditionBrick(brickObject, context, level, out result);
         }

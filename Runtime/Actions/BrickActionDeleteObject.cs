@@ -15,7 +15,7 @@ namespace Solcery.BrickInterpretation.Runtime.Actions
 
         public override void Reset() { }
 
-        public override void Run(IServiceBricks serviceBricks, JArray parameters, IContext context, int level)
+        public override void Run(IServiceBricksInternal serviceBricks, JArray parameters, IContext context, int level)
         {
             if (context.Object.TryPop(out object @object) 
                 && context.DeleteObject(@object))

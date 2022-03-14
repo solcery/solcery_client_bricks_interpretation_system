@@ -22,7 +22,7 @@ namespace Solcery.BrickInterpretation.Runtime
 
     public abstract class Brick<T> : Brick
     {
-        public abstract T Run(IServiceBricks serviceBricks, JArray parameters, IContext context, int level);
+        public abstract T Run(IServiceBricksInternal serviceBricks, JArray parameters, IContext context, int level);
 
         protected Brick(int type, int subType) : base(type, subType) { }
     }

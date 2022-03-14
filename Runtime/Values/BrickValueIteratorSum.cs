@@ -17,7 +17,7 @@ namespace Solcery.BrickInterpretation.Runtime.Values
         
         public override void Reset() { }
 
-        public override int Run(IServiceBricks serviceBricks, JArray parameters, IContext context, int level)
+        public override int Run(IServiceBricksInternal serviceBricks, JArray parameters, IContext context, int level)
         {
             if (parameters.Count >= 3
                 && parameters[0].TryParseBrickParameter(out _, out JObject conditionBrickIteration)

@@ -14,7 +14,7 @@ namespace Solcery.BrickInterpretation.Runtime.Conditions
 
         private BrickConditionConst(int type, int subType) : base(type, subType) { }
         
-        public override bool Run(IServiceBricks serviceBricks, JArray parameters, IContext context, int level)
+        public override bool Run(IServiceBricksInternal serviceBricks, JArray parameters, IContext context, int level)
         {
             if (parameters.Count > 0 
                 && parameters[0].TryParseBrickParameter(out _, out bool value))

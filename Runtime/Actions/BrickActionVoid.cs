@@ -14,7 +14,7 @@ namespace Solcery.BrickInterpretation.Runtime.Actions
         
         public override void Reset() { }
 
-        public override void Run(IServiceBricks serviceBricks, JArray parameters, IContext context, int level)
+        public override void Run(IServiceBricksInternal serviceBricks, JArray parameters, IContext context, int level)
         {
             //Debug.Log($"BrickActionVoid Run level {level}!");
         }

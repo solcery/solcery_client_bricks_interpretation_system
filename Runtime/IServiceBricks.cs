@@ -13,9 +13,7 @@ namespace Solcery.BrickInterpretation.Runtime
         void RegistrationBrickType(BrickTypes type, BrickConditionTypes subType, Func<int, int, Brick> created, uint capacity = 1);
         void RegistrationBrickType(BrickTypes type, BrickValueTypes subType, Func<int, int, Brick> created, uint capacity = 1);
         void RegistrationCustomBricksData(JArray customBricksJson);
-        bool ExecuteActionBrick(JObject brickObject, IContext context, int level);
-        bool ExecuteValueBrick(JObject brickObject, IContext context, int level, out int result);
-        bool ExecuteConditionBrick(JObject brickObject, IContext context, int level, out bool result);
+        bool ExecuteBrick(JObject brickObject, IContext context, int level);
         void Destroy();
     }
 }

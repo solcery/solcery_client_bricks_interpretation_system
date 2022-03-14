@@ -14,7 +14,7 @@ namespace Solcery.BrickInterpretation.Runtime.Values
         
         private BrickValueConst(int type, int subType) : base(type, subType) { }
         
-        public override int Run(IServiceBricks serviceBricks, JArray parameters, IContext context, int level)
+        public override int Run(IServiceBricksInternal serviceBricks, JArray parameters, IContext context, int level)
         {
             if (parameters.Count > 0 
                 && parameters[0].TryParseBrickParameter(out _, out int value))
