@@ -24,6 +24,7 @@ namespace Solcery.BrickInterpretation.Runtime.Actions
             {
                 context.GameStates.PushGameState();
                 context.GameStates.PushDelay(delayMsec);
+                return;
             }
             
             throw new Exception($"BrickActionPause Run parameters {parameters}!");
