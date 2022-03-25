@@ -21,11 +21,15 @@ namespace Solcery.BrickInterpretation.Runtime.Actions
             if (parameters.Count > 0
                 && parameters[0].TryParseBrickParameter(out _, out string eventName)
                 && context.Object.TryPeek(out object @object)
-                && context.GameObjects.TryGetCardTypeData(@object, out var objectData)
-                && objectData.TryGetValue($"action_on_{eventName}", out JObject actionBrick)
-                && serviceBricks.ExecuteActionBrick(actionBrick, context, level + 1))
+                && context.GameObjects.TryGetCardTypeData(@object, out var objectData))
             {
-                return;
+                context.Log.Print(objectData.ToString());
+                
+                if (objectData.TryGetValue($"action_on_{eventName}", out JObject actionBrick)
+                    && serviceBricks.ExecuteActionBrick(actionBrick, context, level + 1))
+                {
+                    return;
+                }
             }
             
             throw new Exception($"BrickActionEvent Run parameters {parameters}!");
