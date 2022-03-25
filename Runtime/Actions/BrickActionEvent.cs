@@ -23,10 +23,14 @@ namespace Solcery.BrickInterpretation.Runtime.Actions
                 && context.Object.TryPeek(out object @object)
                 && context.GameObjects.TryGetCardTypeData(@object, out var objectData))
             {
-                context.Log.Print(objectData.ToString());
-                
-                if (objectData.TryGetValue($"action_on_{eventName}", out JObject actionBrick)
-                    && serviceBricks.ExecuteActionBrick(actionBrick, context, level + 1))
+                if (objectData.TryGetValue($"action_on_{eventName}", out JObject actionBrick))
+                {
+                    if (serviceBricks.ExecuteActionBrick(actionBrick, context, level + 1))
+                    {
+                        return;
+                    }
+                }
+                else
                 {
                     return;
                 }
