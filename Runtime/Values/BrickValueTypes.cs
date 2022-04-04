@@ -17,6 +17,8 @@ namespace Solcery.BrickInterpretation.Runtime.Values
         CardTypeId = 12,
         GameAttribute = 13,
         IteratorSum = 14,
-        SetVariable = 15
+        SetVariable = 15,
+        IteratorMax = 16,
+        IteratorMin = 17
     }
 }
