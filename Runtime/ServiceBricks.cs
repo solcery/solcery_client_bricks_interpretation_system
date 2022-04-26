@@ -11,6 +11,8 @@ namespace Solcery.BrickInterpretation.Runtime
 {
     public class ServiceBricks : IServiceBricks, IServiceBricksInternal
     {
+        private const int ExecuteMaxDepth = 1000;
+        
         private readonly Dictionary<int, JObject> _customBricks;
 
         private readonly Dictionary<int, Dictionary<int, Func<int, int, Brick>>> _creationFuncForTypesSubtypes;
@@ -260,6 +262,11 @@ namespace Solcery.BrickInterpretation.Runtime
 
         private bool ExecuteActionBrick(JObject brickObject, IContext context, int level)
         {
+            if (level >= ExecuteMaxDepth)
+            {
+                throw new Exception($"ExecuteActionBrick depth level {level}!");
+            }
+            
             var completed = false;
             BrickAction brick = null;
 
@@ -287,6 +294,11 @@ namespace Solcery.BrickInterpretation.Runtime
 
         private bool ExecuteValueBrick(JObject brickObject, IContext context, int level, out int result)
         {
+            if (level >= ExecuteMaxDepth)
+            {
+                throw new Exception($"ExecuteActionBrick depth level {level}!");
+            }
+            
             result = 0;
             var completed = false;
             BrickValue brick = null;
@@ -315,6 +327,11 @@ namespace Solcery.BrickInterpretation.Runtime
 
         private bool ExecuteConditionBrick(JObject brickObject, IContext context, int level, out bool result)
         {
+            if (level >= ExecuteMaxDepth)
+            {
+                throw new Exception($"ExecuteActionBrick depth level {level}!");
+            }
+            
             result = false;
             var completed = false;
             BrickCondition brick = null;
