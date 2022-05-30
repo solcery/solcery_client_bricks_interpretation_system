@@ -21,5 +21,6 @@ namespace Solcery.BrickInterpretation.Runtime.Contexts
 
         bool DeleteObject(object @object);
         bool TryCreateObject(JObject parameters, out object @object);
+        bool TryResetObjectAttrs(object @object);
     }
 }

@@ -16,6 +16,7 @@ namespace Solcery.BrickInterpretation.Runtime.Actions
         Event = 11,
         CreateObject = 12,
         DeleteObject = 13,
+        ClearAttrs = 14,
         ConsoleLog = 256
     }
 }
