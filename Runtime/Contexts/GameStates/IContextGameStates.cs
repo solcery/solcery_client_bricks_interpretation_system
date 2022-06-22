@@ -8,6 +8,8 @@ namespace Solcery.BrickInterpretation.Runtime.Contexts.GameStates
         
         void PushGameState();
         void PushDelay(int msec);
+        void PushStartTimer(int durationMsec, int targetObjectId);
+        void PushStopTimer();
         bool TryGetGameState(int deltaTimeMsec, out JObject gameState);
     }
 }
