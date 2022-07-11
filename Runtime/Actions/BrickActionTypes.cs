@@ -19,6 +19,7 @@ namespace Solcery.BrickInterpretation.Runtime.Actions
         ClearAttrs = 14,
         StartTimer = 15,
         StopTimer = 16,
+        Transform = 17,
         ConsoleLog = 256
     }
 }

@@ -9,5 +9,6 @@ namespace Solcery.BrickInterpretation.Runtime.Contexts.Objects
         bool TryGetCardTypeData(object @object, out JObject cardTypeData);
         bool TryGetCardId(object @object, out int cardId);
         bool TryGetCardTypeId(object @object, out int cardTypeId);
+        bool SetCardTypeId(object @object, int cardTypeId);
     }
 }
