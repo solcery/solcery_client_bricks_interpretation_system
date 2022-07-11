@@ -36,7 +36,53 @@ namespace Solcery.BrickInterpretation.Runtime
         {
             RegistrationCustomBricksData(customBricksJson);
         }
-        
+
+        bool IServiceBricks.TryCheckAllBrickRegistration(out List<string> unregisteredBrickList)
+        {
+            unregisteredBrickList = new List<string>();
+
+            {
+                var type = (int)BrickTypes.Action;
+                var values = (BrickActionTypes[]) Enum.GetValues(typeof(BrickActionTypes));
+                foreach (var value in values)
+                {
+                    if (!_creationFuncForTypesSubtypes.TryGetValue(type, out var dict) 
+                        || !dict.ContainsKey((int)value))
+                    {
+                        unregisteredBrickList.Add($"Brick type {Enum.GetName(typeof(BrickTypes), BrickTypes.Action)} subtype {Enum.GetName(typeof(BrickActionTypes), value)} unregistered!");
+                    }
+                }
+            }
+
+            {
+                var type = (int)BrickTypes.Condition;
+                var values = (BrickConditionTypes[]) Enum.GetValues(typeof(BrickConditionTypes));
+                foreach (var value in values)
+                {
+                    if (!_creationFuncForTypesSubtypes.TryGetValue(type, out var dict) 
+                        || !dict.ContainsKey((int)value))
+                    {
+                        unregisteredBrickList.Add($"Brick type {Enum.GetName(typeof(BrickTypes), BrickTypes.Condition)} subtype {Enum.GetName(typeof(BrickConditionTypes), value)} unregistered!");
+                    }
+                }
+            }
+            
+            {
+                var type = (int)BrickTypes.Value;
+                var values = (BrickValueTypes[]) Enum.GetValues(typeof(BrickValueTypes));
+                foreach (var value in values)
+                {
+                    if (!_creationFuncForTypesSubtypes.TryGetValue(type, out var dict) 
+                        || !dict.ContainsKey((int)value))
+                    {
+                        unregisteredBrickList.Add($"Brick type {Enum.GetName(typeof(BrickTypes), BrickTypes.Value)} subtype {Enum.GetName(typeof(BrickValueTypes), value)} unregistered!");
+                    }
+                }
+            }
+
+            return unregisteredBrickList.Count <= 0;
+        }
+
         void IServiceBricks.RegistrationBrickType(BrickTypes type, BrickActionTypes subType, Func<int, int, Brick> created, uint capacity)
         {
             RegistrationBrickType((int)type, (int)subType, created, capacity);
