@@ -17,9 +17,10 @@ namespace Solcery.BrickInterpretation.Runtime.Actions
         public override void Run(IServiceBricksInternal serviceBricks, JArray parameters, IContext context, int level)
         {
             if (context.Object.TryPeek<object>(out var @object) 
-                && context.GameObjects.TryGetCardTypeData(@object, out var data))
+                && context.GameObjects.TryGetCardTypeValue(@object, "action", out var valueToken)
+                && valueToken is JObject actionBrick)
             {
-                serviceBricks.ExecuteActionBrick(data["action"] as JObject, context, level + 1);
+                serviceBricks.ExecuteActionBrick(actionBrick, context, level + 1);
                 return;
             }
 
