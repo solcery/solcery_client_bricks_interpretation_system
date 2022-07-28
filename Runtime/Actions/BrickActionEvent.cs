@@ -20,10 +20,10 @@ namespace Solcery.BrickInterpretation.Runtime.Actions
         {
             if (parameters.Count > 0
                 && parameters[0].TryParseBrickParameter(out _, out string eventName)
-                && context.Object.TryPeek(out object @object)
-                && context.GameObjects.TryGetCardTypeValue(@object, $"action_on_{eventName}", out var valueToken))
+                && context.Object.TryPeek(out object @object))
             {
-                if (valueToken is JObject actionBrick)
+                if (context.GameObjects.TryGetCardTypeValue(@object, $"action_on_{eventName}", out var valueToken)
+                    && valueToken is JObject actionBrick)
                 {
                     if (serviceBricks.ExecuteActionBrick(actionBrick, context, level + 1))
                     {
