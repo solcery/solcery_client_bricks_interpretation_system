@@ -19,7 +19,8 @@ namespace Solcery.BrickInterpretation.Runtime.Actions
         public override void Run(IServiceBricksInternal serviceBricks, JArray parameters, IContext context, int level)
         {
             if (parameters.Count == 1
-                && parameters[0].TryParseBrickParameter(out _, out int tplId)
+                && parameters[0].TryParseBrickParameter(out _, out JObject valueBrickTplId)
+                && serviceBricks.ExecuteValueBrick(valueBrickTplId, context, level + 1, out var tplId)
                 && context.Object.TryPeek<object>(out var @object)
                 && context.GameObjects.SetCardTypeId(@object, tplId))
             {
