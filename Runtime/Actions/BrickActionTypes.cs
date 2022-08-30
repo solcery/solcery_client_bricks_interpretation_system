@@ -20,6 +20,7 @@ namespace Solcery.BrickInterpretation.Runtime.Actions
         StartTimer = 15,
         StopTimer = 16,
         Transform = 17,
+        PlaySound = 18,
         ConsoleLog = 256
     }
 }
