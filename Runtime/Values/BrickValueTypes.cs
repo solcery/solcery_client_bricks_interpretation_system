@@ -19,6 +19,8 @@ namespace Solcery.BrickInterpretation.Runtime.Values
         IteratorSum = 14,
         SetVariable = 15,
         IteratorMax = 16,
-        IteratorMin = 17
+        IteratorMin = 17,
+        GetScopeVariable = 18,
+        SetScopeVariable = 19
     }
 }
