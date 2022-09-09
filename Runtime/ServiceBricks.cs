@@ -268,7 +268,7 @@ namespace Solcery.BrickInterpretation.Runtime
                 && _customBricks.TryGetValue(typeSubType.Item2, out var customBrickToken))
             {
                 //context.GameArgs.Push(CreateCustomArgs(customParameters));
-                CreateCustomArgs(customParameters, context.LocalScopes.Push());
+                CreateCustomArgs(customParameters, context.LocalScopes.New());
                 completed = ExecuteActionBrick(customBrickToken, context, level);
                 context.LocalScopes.Pop();
                 //context.GameArgs.Pop();
@@ -287,7 +287,7 @@ namespace Solcery.BrickInterpretation.Runtime
                 && _customBricks.TryGetValue(typeSubType.Item2, out var customBrickToken))
             {
                 //context.GameArgs.Push(CreateCustomArgs(customParameters));
-                CreateCustomArgs(customParameters, context.LocalScopes.Push());
+                CreateCustomArgs(customParameters, context.LocalScopes.New());
                 completed = ExecuteValueBrick(customBrickToken, context, level, out result);
                 context.LocalScopes.Pop();
                 //context.GameArgs.Pop();
@@ -306,7 +306,7 @@ namespace Solcery.BrickInterpretation.Runtime
                 && _customBricks.TryGetValue(typeSubType.Item2, out var customBrickToken))
             {
                 //context.GameArgs.Push(CreateCustomArgs(customParameters));
-                CreateCustomArgs(customParameters, context.LocalScopes.Push());
+                CreateCustomArgs(customParameters, context.LocalScopes.New());
                 completed = ExecuteConditionBrick(customBrickToken, context, level, out result);
                 context.LocalScopes.Pop();
                 //context.GameArgs.Pop();

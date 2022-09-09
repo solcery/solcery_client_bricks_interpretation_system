@@ -2,8 +2,8 @@
 {
     public interface IContextLocalScopes
     {
-        IContextLocalScope Push();
-        bool TryPeek(out IContextLocalScope localScope);
-        void Pop();
+        IContextLocalScope New();
+        void Push(IContextLocalScope localScope);
+        IContextLocalScope Pop();
     }
 }

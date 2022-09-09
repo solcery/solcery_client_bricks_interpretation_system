@@ -19,10 +19,11 @@ namespace Solcery.BrickInterpretation.Runtime.Values
             if (parameters.Count >= 2
                 && parameters[0].TryParseBrickParameter(out _, out string varName)
                 && parameters[1].TryParseBrickParameter(out _, out JObject valueBrick)
-                && serviceBricks.ExecuteValueBrick(valueBrick, context, level + 1, out var value)
-                && context.LocalScopes.TryPeek(out var localScope))
+                && serviceBricks.ExecuteValueBrick(valueBrick, context, level + 1, out var value))
             {
+                var localScope = context.LocalScopes.Pop();
                 localScope.Vars.Update(varName, value);
+                context.LocalScopes.Push(localScope);
                 return value;
             }
             

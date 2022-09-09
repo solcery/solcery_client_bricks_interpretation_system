@@ -25,7 +25,7 @@ namespace Solcery.BrickInterpretation.Runtime.Actions
                 if (context.GameObjects.TryGetCardTypeValue(@object, $"action_on_{eventName}", out var valueToken)
                     && valueToken is JObject actionBrick)
                 {
-                    context.LocalScopes.Push();
+                    context.LocalScopes.New();
                     if (serviceBricks.ExecuteActionBrick(actionBrick, context, level + 1))
                     {
                         context.LocalScopes.Pop();
