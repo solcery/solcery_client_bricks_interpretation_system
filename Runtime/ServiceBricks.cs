@@ -4,6 +4,7 @@ using Newtonsoft.Json.Linq;
 using Solcery.BrickInterpretation.Runtime.Actions;
 using Solcery.BrickInterpretation.Runtime.Conditions;
 using Solcery.BrickInterpretation.Runtime.Contexts;
+using Solcery.BrickInterpretation.Runtime.Contexts.LocalScopes;
 using Solcery.BrickInterpretation.Runtime.Utils;
 using Solcery.BrickInterpretation.Runtime.Values;
 
@@ -232,19 +233,30 @@ namespace Solcery.BrickInterpretation.Runtime
             _poolOfBricks[brick.Type][brick.SubType].Push(brick);
         }
 
-        private Dictionary<string, JObject> CreateCustomArgs(JArray customParameters)
+        // private Dictionary<string, JObject> CreateCustomArgs(JArray customParameters)
+        // {
+        //     var arg = new Dictionary<string, JObject>(customParameters.Count);
+        //     
+        //     foreach (var customParameterToken in customParameters)
+        //     {
+        //         if (customParameterToken.TryParseBrickParameter(out var name, out JObject brick))
+        //         {
+        //             arg.Add(name, brick);
+        //         }
+        //     }
+        //
+        //     return arg;
+        // }
+
+        private void CreateCustomArgs(JArray customParameters, IContextLocalScope localScope)
         {
-            var arg = new Dictionary<string, JObject>(customParameters.Count);
-            
             foreach (var customParameterToken in customParameters)
             {
                 if (customParameterToken.TryParseBrickParameter(out var name, out JObject brick))
                 {
-                    arg.Add(name, brick);
+                    localScope.Args.Update(name, brick);
                 }
             }
-
-            return arg;
         }
 
         private bool ExecuteActionCustomBrick(JObject brickObject, IContext context, int level)
@@ -255,12 +267,11 @@ namespace Solcery.BrickInterpretation.Runtime
                 && brickObject.TryGetBrickParameters(out var customParameters)
                 && _customBricks.TryGetValue(typeSubType.Item2, out var customBrickToken))
             {
-                //var cbn = brickObject.GetValue<string>("name");
-                context.GameArgs.Push(CreateCustomArgs(customParameters));
-                //TestUtils.AddLine(level, $"Start {level}-{cbn}");
+                //context.GameArgs.Push(CreateCustomArgs(customParameters));
+                CreateCustomArgs(customParameters, context.LocalScopes.Push());
                 completed = ExecuteActionBrick(customBrickToken, context, level);
-                context.GameArgs.Pop();
-                //TestUtils.AddLine(level, $"Finish {level}-{cbn}");
+                context.LocalScopes.Pop();
+                //context.GameArgs.Pop();
             }
 
             return completed;
@@ -275,12 +286,11 @@ namespace Solcery.BrickInterpretation.Runtime
                 && brickObject.TryGetBrickParameters(out var customParameters)
                 && _customBricks.TryGetValue(typeSubType.Item2, out var customBrickToken))
             {
-                //var cbn = brickObject.GetValue<string>("name");
-                context.GameArgs.Push(CreateCustomArgs(customParameters));
-                //TestUtils.AddLine(level, $"Start {level}-{cbn}");
+                //context.GameArgs.Push(CreateCustomArgs(customParameters));
+                CreateCustomArgs(customParameters, context.LocalScopes.Push());
                 completed = ExecuteValueBrick(customBrickToken, context, level, out result);
-                context.GameArgs.Pop();
-                //TestUtils.AddLine(level, $"Finish {level}-{cbn}");
+                context.LocalScopes.Pop();
+                //context.GameArgs.Pop();
             }
 
             return completed;
@@ -295,12 +305,11 @@ namespace Solcery.BrickInterpretation.Runtime
                 && brickObject.TryGetBrickParameters(out var customParameters)
                 && _customBricks.TryGetValue(typeSubType.Item2, out var customBrickToken))
             {
-                //var cbn = brickObject.GetValue<string>("name");
-                context.GameArgs.Push(CreateCustomArgs(customParameters));
-                //TestUtils.AddLine(level, $"Start {level}-{cbn}");
+                //context.GameArgs.Push(CreateCustomArgs(customParameters));
+                CreateCustomArgs(customParameters, context.LocalScopes.Push());
                 completed = ExecuteConditionBrick(customBrickToken, context, level, out result);
-                context.GameArgs.Pop();
-                //TestUtils.AddLine(level, $"Finish {level}-{cbn}");
+                context.LocalScopes.Pop();
+                //context.GameArgs.Pop();
             }
 
             return completed;

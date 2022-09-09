@@ -15,7 +15,7 @@ namespace Solcery.BrickInterpretation.Runtime.Contexts
         IContextObject Object { get; }
         IContextObjectAttrs ObjectAttrs { get; }
         IContextGameAttrs GameAttrs { get; }
-        IContextGameArgs GameArgs { get; }
+        //IContextGameArgs GameArgs { get; }
         IContextGameVars GameVars { get; }
         IContextGameObjects GameObjects { get; }
         IContextLocalScopes LocalScopes { get; }

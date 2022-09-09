@@ -17,14 +17,16 @@ namespace Solcery.BrickInterpretation.Runtime.Values
         public override int Run(IServiceBricksInternal serviceBricks, JArray parameters, IContext context, int level)
         {
             if (parameters.Count > 0 
-                && parameters[0].TryParseBrickParameter(out _, out string argName))
+                && parameters[0].TryParseBrickParameter(out _, out string argName)
+                && context.LocalScopes.TryPeek(out var localScope))
             {
-                var args = context.GameArgs.Pop();
+                //var args = context.GameArgs.Pop();
+                var args = localScope.Args;
                 if (args.TryGetValue(argName, out var brickObject))
                 {
                     if (serviceBricks.ExecuteValueBrick(brickObject, context, level + 1, out var result))
                     {
-                        context.GameArgs.Push(args);
+                        //context.GameArgs.Push(args);
                         return result;
                     }
                 }
