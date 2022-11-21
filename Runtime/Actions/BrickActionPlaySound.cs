@@ -20,7 +20,8 @@ namespace Solcery.BrickInterpretation.Runtime.Actions
         {
             if(parameters.Count > 0 
                && parameters[0].TryParseBrickParameter(out _, out int soundId)
-               && parameters[1].TryParseBrickParameter(out _, out int volume))
+               && parameters[1].TryParseBrickParameter(out _, out JObject valueBrick)
+               && serviceBricks.ExecuteValueBrick(valueBrick, context, level + 1, out var volume))
             {
                 context.GameStates.PushPlaySound(soundId, volume);
                 return;
