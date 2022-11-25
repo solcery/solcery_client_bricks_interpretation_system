@@ -18,7 +18,7 @@ namespace Solcery.BrickInterpretation.Runtime.Actions
 
         public override void Run(IServiceBricksInternal serviceBricks, JArray parameters, IContext context, int level)
         {
-            if(parameters.Count > 0 
+            if(parameters.Count > 1 
                && parameters[0].TryParseBrickParameter(out _, out int soundId)
                && parameters[1].TryParseBrickParameter(out _, out JObject valueBrick)
                && serviceBricks.ExecuteValueBrick(valueBrick, context, level + 1, out var volume))

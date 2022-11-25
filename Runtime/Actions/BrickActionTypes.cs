@@ -22,6 +22,7 @@ namespace Solcery.BrickInterpretation.Runtime.Actions
         Transform = 17,
         PlaySound = 18,
         SetScopeVariable = 19,
+        PushAction = 20,
         ConsoleLog = 256
     }
 }
