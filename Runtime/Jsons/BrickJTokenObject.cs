@@ -16,13 +16,14 @@ namespace Solcery.BrickInterpretation.Runtime.Jsons
 
         public override JToken Run(IServiceBricksInternal serviceBricks, JArray parameters, IContext context, int level)
         {
-            if (parameters.Count > 0)
+            if (parameters.Count > 0
+                && parameters[0].TryParseBrickParameter(out _, out JArray jKeyValueBricks))
             {
                 var result = new JObject();
 
-                foreach (var parameter in parameters)
+                foreach (var jKeyValueBrickToken in jKeyValueBricks)
                 {
-                    if (parameter.TryParseBrickParameter(out _, out JObject jKeyValueBrick)
+                    if (jKeyValueBrickToken is JObject jKeyValueBrick
                         && serviceBricks.ExecuteJKeyValueBrick(jKeyValueBrick, context, level + 1, out var value))
                     {
                         result.Add(value.Item1, value.Item2);
