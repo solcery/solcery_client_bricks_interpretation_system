@@ -82,6 +82,32 @@ namespace Solcery.BrickInterpretation.Runtime
                     }
                 }
             }
+            
+            {
+                var type = (int)BrickTypes.JKeyValue;
+                var values = (BrickJKeyValueTypes[]) Enum.GetValues(typeof(BrickJKeyValueTypes));
+                foreach (var value in values)
+                {
+                    if (!_creationFuncForTypesSubtypes.TryGetValue(type, out var dict) 
+                        || !dict.ContainsKey((int)value))
+                    {
+                        unregisteredBrickList.Add($"Brick type {Enum.GetName(typeof(BrickTypes), BrickTypes.JKeyValue)} subtype {Enum.GetName(typeof(BrickJKeyValueTypes), value)} unregistered!");
+                    }
+                }
+            }
+            
+            {
+                var type = (int)BrickTypes.JToken;
+                var values = (BrickJTokenTypes[]) Enum.GetValues(typeof(BrickJTokenTypes));
+                foreach (var value in values)
+                {
+                    if (!_creationFuncForTypesSubtypes.TryGetValue(type, out var dict) 
+                        || !dict.ContainsKey((int)value))
+                    {
+                        unregisteredBrickList.Add($"Brick type {Enum.GetName(typeof(BrickTypes), BrickTypes.JToken)} subtype {Enum.GetName(typeof(BrickJTokenTypes), value)} unregistered!");
+                    }
+                }
+            }
 
             return unregisteredBrickList.Count <= 0;
         }
