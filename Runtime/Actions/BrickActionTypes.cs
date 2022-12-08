@@ -23,6 +23,7 @@ namespace Solcery.BrickInterpretation.Runtime.Actions
         PlaySound = 18,
         SetScopeVariable = 19,
         PushAction = 20,
+        PushActionJToken = 21,
         ConsoleLog = 256
     }
 }

@@ -5,6 +5,8 @@ using Solcery.BrickInterpretation.Runtime.Actions;
 using Solcery.BrickInterpretation.Runtime.Conditions;
 using Solcery.BrickInterpretation.Runtime.Contexts;
 using Solcery.BrickInterpretation.Runtime.Contexts.LocalScopes;
+using Solcery.BrickInterpretation.Runtime.Jsons;
+using Solcery.BrickInterpretation.Runtime.Jsons.JKeyValues;
 using Solcery.BrickInterpretation.Runtime.Utils;
 using Solcery.BrickInterpretation.Runtime.Values;
 
@@ -32,7 +34,7 @@ namespace Solcery.BrickInterpretation.Runtime
         }
 
         #region IServiceBricks implementation
-        
+
         void IServiceBricks.RegistrationCustomBricksData(JArray customBricksJson)
         {
             RegistrationCustomBricksData(customBricksJson);
@@ -99,6 +101,16 @@ namespace Solcery.BrickInterpretation.Runtime
             RegistrationBrickType((int)type, (int)subType, created, capacity);
         }
 
+        void IServiceBricks.RegistrationBrickType(BrickTypes type, BrickJKeyValueTypes subType, Func<int, int, Brick> created, uint capacity)
+        {
+            RegistrationBrickType((int)type, (int)subType, created, capacity);
+        }
+        
+        void IServiceBricks.RegistrationBrickType(BrickTypes type, BrickJTokenTypes subType, Func<int, int, Brick> created, uint capacity)
+        {
+            RegistrationBrickType((int)type, (int)subType, created, capacity);
+        }
+
         void IServiceBricks.Destroy()
         {
             Cleanup();
@@ -130,7 +142,17 @@ namespace Solcery.BrickInterpretation.Runtime
         {
             return ExecuteConditionBrick(brickObject, context, level, out result);
         }
-        
+
+        bool IServiceBricksInternal.ExecuteJKeyValueBrick(JObject brickObject, IContext context, int level, out Tuple<string, JToken> result)
+        {
+            return ExecuteJKeyValueBrick(brickObject, context, level, out result);
+        }
+
+        bool IServiceBricksInternal.ExecuteJTokenBrick(JObject brickObject, IContext context, int level, out JToken result)
+        {
+            return ExecuteJTokenBrick(brickObject, context, level, out result);
+        }
+
         #endregion
 
         #region Private method implementation
@@ -233,21 +255,6 @@ namespace Solcery.BrickInterpretation.Runtime
             _poolOfBricks[brick.Type][brick.SubType].Push(brick);
         }
 
-        // private Dictionary<string, JObject> CreateCustomArgs(JArray customParameters)
-        // {
-        //     var arg = new Dictionary<string, JObject>(customParameters.Count);
-        //     
-        //     foreach (var customParameterToken in customParameters)
-        //     {
-        //         if (customParameterToken.TryParseBrickParameter(out var name, out JObject brick))
-        //         {
-        //             arg.Add(name, brick);
-        //         }
-        //     }
-        //
-        //     return arg;
-        // }
-
         private void CreateCustomArgs(JArray customParameters, IContextLocalScope localScope)
         {
             foreach (var customParameterToken in customParameters)
@@ -267,11 +274,9 @@ namespace Solcery.BrickInterpretation.Runtime
                 && brickObject.TryGetBrickParameters(out var customParameters)
                 && _customBricks.TryGetValue(typeSubType.Item2, out var customBrickToken))
             {
-                //context.GameArgs.Push(CreateCustomArgs(customParameters));
                 CreateCustomArgs(customParameters, context.LocalScopes.New());
                 completed = ExecuteActionBrick(customBrickToken, context, level);
                 context.LocalScopes.Pop();
-                //context.GameArgs.Pop();
             }
 
             return completed;
@@ -286,11 +291,9 @@ namespace Solcery.BrickInterpretation.Runtime
                 && brickObject.TryGetBrickParameters(out var customParameters)
                 && _customBricks.TryGetValue(typeSubType.Item2, out var customBrickToken))
             {
-                //context.GameArgs.Push(CreateCustomArgs(customParameters));
                 CreateCustomArgs(customParameters, context.LocalScopes.New());
                 completed = ExecuteValueBrick(customBrickToken, context, level, out result);
                 context.LocalScopes.Pop();
-                //context.GameArgs.Pop();
             }
 
             return completed;
@@ -305,11 +308,43 @@ namespace Solcery.BrickInterpretation.Runtime
                 && brickObject.TryGetBrickParameters(out var customParameters)
                 && _customBricks.TryGetValue(typeSubType.Item2, out var customBrickToken))
             {
-                //context.GameArgs.Push(CreateCustomArgs(customParameters));
                 CreateCustomArgs(customParameters, context.LocalScopes.New());
                 completed = ExecuteConditionBrick(customBrickToken, context, level, out result);
                 context.LocalScopes.Pop();
-                //context.GameArgs.Pop();
+            }
+
+            return completed;
+        }
+        
+        private bool ExecuteJKeyValueCustomBrick(JObject brickObject, IContext context, int level, out Tuple<string, JToken> result)
+        {
+            result = null;
+            var completed = false;
+            
+            if (brickObject.TryGetBrickTypeSubType(out var typeSubType)
+                && brickObject.TryGetBrickParameters(out var customParameters)
+                && _customBricks.TryGetValue(typeSubType.Item2, out var customBrickToken))
+            {
+                CreateCustomArgs(customParameters, context.LocalScopes.New());
+                completed = ExecuteJKeyValueBrick(customBrickToken, context, level, out result);
+                context.LocalScopes.Pop();
+            }
+
+            return completed;
+        }
+        
+        private bool ExecuteJTokenCustomBrick(JObject brickObject, IContext context, int level, out JToken result)
+        {
+            result = false;
+            var completed = false;
+            
+            if (brickObject.TryGetBrickTypeSubType(out var typeSubType)
+                && brickObject.TryGetBrickParameters(out var customParameters)
+                && _customBricks.TryGetValue(typeSubType.Item2, out var customBrickToken))
+            {
+                CreateCustomArgs(customParameters, context.LocalScopes.New());
+                completed = ExecuteJTokenBrick(customBrickToken, context, level, out result);
+                context.LocalScopes.Pop();
             }
 
             return completed;
@@ -331,11 +366,8 @@ namespace Solcery.BrickInterpretation.Runtime
                     && !IsCustomBrick(typeSubType.Item2)
                     && brickObject.TryGetBrickParameters(out var parameters))
                 {
-                    //var cbn = brickObject.GetValue<string>("name");
                     brick = CreateBrick<BrickAction>(typeSubType.Item1, typeSubType.Item2);
-                    //TestUtils.AddLine(level, $"Start {level}-{cbn}");
                     brick.Run(this, parameters, context, level);
-                    //TestUtils.AddLine(level, $"Finish {level}-{cbn}");
                     completed = true;
                 }
             }
@@ -364,11 +396,8 @@ namespace Solcery.BrickInterpretation.Runtime
                     && !IsCustomBrick(typeSubType.Item2)
                     && brickObject.TryGetBrickParameters(out var parameters))
                 {
-                    //var cbn = brickObject.GetValue<string>("name");
                     brick = CreateBrick<BrickValue>(typeSubType.Item1, typeSubType.Item2);
-                    //TestUtils.AddLine(level, $"Start {level}-{cbn}");
                     result = brick.Run(this, parameters, context, level);
-                    //TestUtils.AddLine(level, $"Finish {level}-{cbn}");
                     completed = true;
                 }
             }
@@ -397,11 +426,8 @@ namespace Solcery.BrickInterpretation.Runtime
                     && !IsCustomBrick(typeSubType.Item2)
                     && brickObject.TryGetBrickParameters(out var parameters))
                 {
-                    //var cbn = brickObject.GetValue<string>("name");
                     brick = CreateBrick<BrickCondition>(typeSubType.Item1, typeSubType.Item2);
-                    //TestUtils.AddLine(level, $"Start {level}-{cbn}");
                     result = brick.Run(this, parameters, context, level);
-                    //TestUtils.AddLine(level, $"Finish {level}-{cbn}");
                     completed = true;
                 }
             }
@@ -411,6 +437,66 @@ namespace Solcery.BrickInterpretation.Runtime
             }
 
             return completed || ExecuteConditionCustomBrick(brickObject, context, level, out result);
+        }
+        
+        private bool ExecuteJKeyValueBrick(JObject brickObject, IContext context, int level, out Tuple<string, JToken> result)
+        {
+            if (level >= ExecuteMaxDepth)
+            {
+                throw new Exception($"ExecuteActionBrick depth level {level}!");
+            }
+            
+            result = null;
+            var completed = false;
+            BrickJKeyValue brick = null;
+            
+            try
+            {
+                if (brickObject.TryGetBrickTypeSubType(out var typeSubType)
+                    && !IsCustomBrick(typeSubType.Item2)
+                    && brickObject.TryGetBrickParameters(out var parameters))
+                {
+                    brick = CreateBrick<BrickJKeyValue>(typeSubType.Item1, typeSubType.Item2);
+                    result = brick.Run(this, parameters, context, level);
+                    completed = true;
+                }
+            }
+            finally
+            {
+                FreeBrick(brick);
+            }
+
+            return completed || ExecuteJKeyValueCustomBrick(brickObject, context, level, out result);
+        }
+        
+        private bool ExecuteJTokenBrick(JObject brickObject, IContext context, int level, out JToken result)
+        {
+            if (level >= ExecuteMaxDepth)
+            {
+                throw new Exception($"ExecuteActionBrick depth level {level}!");
+            }
+            
+            result = null;
+            var completed = false;
+            BrickJToken brick = null;
+            
+            try
+            {
+                if (brickObject.TryGetBrickTypeSubType(out var typeSubType)
+                    && !IsCustomBrick(typeSubType.Item2)
+                    && brickObject.TryGetBrickParameters(out var parameters))
+                {
+                    brick = CreateBrick<BrickJToken>(typeSubType.Item1, typeSubType.Item2);
+                    result = brick.Run(this, parameters, context, level);
+                    completed = true;
+                }
+            }
+            finally
+            {
+                FreeBrick(brick);
+            }
+
+            return completed || ExecuteJTokenCustomBrick(brickObject, context, level, out result);
         }
 
         #endregion

@@ -13,6 +13,7 @@ namespace Solcery.BrickInterpretation.Runtime.Contexts.GameStates
         void PushStopTimer();
         void PushPlaySound(int soundId, int volume);
         void PushAction(int actionType, IReadOnlyDictionary<string, int> value);
+        void PushActionJToken(int actionType, JToken value);
         bool TryGetGameState(int deltaTimeMsec, out JObject gameState);
     }
 }
