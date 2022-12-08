@@ -2,6 +2,7 @@
 {
     public enum BrickJKeyValueTypes
     {
-        Base = 0
+        Base = 0,
+        Argument = 1
     }
 }
